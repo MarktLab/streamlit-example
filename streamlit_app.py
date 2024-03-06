@@ -1,21 +1,18 @@
 import streamlit as st
 import openai
 
+# Set the OpenAI API key from Streamlit secrets
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+
 # Initialize session state for conversation history
 if 'conversation' not in st.session_state:
     st.session_state.conversation = []
 
-assistant = client.beta.assistants.create(
-    name="Direct Response Copywriter",
-    instructions="You are an amazing copywriter. Your style is plainspoken and direct.",
-    model="gpt-4-turbo-preview"
-)
 # Function to query OpenAI Assistant API
 def query_openai_assistant(prompt):
-    openai.api_key = st.secrets["OPENAI_API_KEY"]
-    assistant_id = "your-assistant-id-here"  # Replace with your actual Assistant ID
+    assistant_id = "asst_GY1qNDQLco1yNLdrH4Fvq1ow"  # Assistant ID
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",  # or your Assistant's model
+        model="gpt-3.5-turbo",  # Specify the model of your Assistant
         messages=[{"role": "user", "content": prompt}],
         assistant=assistant_id,
     )
