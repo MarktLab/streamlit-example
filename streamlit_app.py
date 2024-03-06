@@ -1,40 +1,29 @@
-import altair as alt
-import numpy as np
-import pandas as pd
 import streamlit as st
 
-"""
-# Welcome to Streamlit!
+# Function to generate content based on the input
+def generate_content(nonprofit_name, campaign_start_date, campaign_info, additional_prompt=""):
+    # Here you would integrate with a model to generate content
+    # For demonstration, we're simply echoing the inputs
+    response = f"Please write a thank you letter for {nonprofit_name} that will be sent on {campaign_start_date}."
+    response += f" Here is more info about the campaign: {campaign_info}."
+    if additional_prompt:
+        response += f" Additional details: {additional_prompt}"
+    return response
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+# SECTION 1: Input fields
+st.title("Nonprofit Marketing Agent")
+st.header("Section 1: Campaign Details")
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+nonprofit_name = st.text_input("Nonprofit name:")
+campaign_start_date = st.date_input("Campaign start date:")
+campaign_info = st.text_area("More info about the campaign:")
 
-num_points = st.slider("Number of points in spiral", 1, 10000, 1100)
-num_turns = st.slider("Number of turns in spiral", 1, 300, 31)
+st.header("Section 2: Generate Content")
+additional_prompt = st.text_input("Enter additional details or modifications for the content generation:")
 
-indices = np.linspace(0, 1, num_points)
-theta = 2 * np.pi * num_turns * indices
-radius = indices
+# Generate button
+if st.button("Generate Content"):
+    content = generate_content(nonprofit_name, campaign_start_date, campaign_info, additional_prompt)
+    st.text_area("Generated Content:", value=content, height=300)
 
-x = radius * np.cos(theta)
-y = radius * np.sin(theta)
-
-df = pd.DataFrame({
-    "x": x,
-    "y": y,
-    "idx": indices,
-    "rand": np.random.randn(num_points),
-})
-
-st.altair_chart(alt.Chart(df, height=700, width=700)
-    .mark_point(filled=True)
-    .encode(
-        x=alt.X("x", axis=None),
-        y=alt.Y("y", axis=None),
-        color=alt.Color("idx", legend=None, scale=alt.Scale()),
-        size=alt.Size("rand", legend=None, scale=alt.Scale(range=[1, 150])),
-    ))
+# This is a basic implementation. For a chat-like environment, consider adding more interactive elements.
