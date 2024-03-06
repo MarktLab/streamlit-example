@@ -1,29 +1,39 @@
 import streamlit as st
+import openai
 
-# Function to generate content based on the input
-def generate_content(nonprofit_name, campaign_start_date, campaign_info, additional_prompt=""):
-    # Here you would integrate with a model to generate content
-    # For demonstration, we're simply echoing the inputs
-    response = f"Please write a thank you letter for {nonprofit_name} that will be sent on {campaign_start_date}."
-    response += f" Here is more info about the campaign: {campaign_info}."
-    if additional_prompt:
-        response += f" Additional details: {additional_prompt}"
-    return response
+# Function to query OpenAI API
+def query_openai(prompt):
+    openai.api_key = st.secrets["OPENAI_API_KEY"]
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    return response.choices[0].message['content']
 
-# SECTION 1: Input fields
-st.title("Nonprofit Marketing Agent")
-st.header("Section 1: Campaign Details")
+st.title('Nonprofit Marketing Assistant')
 
-nonprofit_name = st.text_input("Nonprofit name:")
-campaign_start_date = st.date_input("Campaign start date:")
-campaign_info = st.text_area("More info about the campaign:")
+# SECTION 1: Collecting Inputs
+with st.form("input_form"):
+    nonprofit_name = st.text_input('Nonprofit name')
+    campaign_start_date = st.date_input('Campaign start date')
+    more_info_about_campaign = st.text_area('More info about the campaign')
+    submitted = st.form_submit_button('Submit')
 
-st.header("Section 2: Generate Content")
-additional_prompt = st.text_input("Enter additional details or modifications for the content generation:")
+# SECTION 2: Chat Environment
+if submitted:
+    custom_prompt = f"Please write a thank you letter for {nonprofit_name} that will be sent on {campaign_start_date}. Here is more info about the campaign: {more_info_about_campaign}"
+    
+    if 'conversation' not in st.session_state:
+        st.session_state.conversation = []
+    
+    st.session_state.conversation.append(f"Prompt: {custom_prompt}")
 
-# Generate button
-if st.button("Generate Content"):
-    content = generate_content(nonprofit_name, campaign_start_date, campaign_info, additional_prompt)
-    st.text_area("Generated Content:", value=content, height=300)
-
-# This is a basic implementation. For a chat-like environment, consider adding more interactive elements.
+    # Querying OpenAI Assistant API
+    openai_response = query_openai(custom_prompt)
+    st.session_state.conversation.append(f"AI Response: {openai_response}")
+    
+    for message in st.session_state.conversation:
+        st.text_area("Chat", value=message, height=300, key=message[:15])
