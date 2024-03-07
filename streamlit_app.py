@@ -3,7 +3,7 @@ import streamlit as st
 import re
 
 # Title for your app
-st.title("Dynamic Prompt Generator")
+st.title('[AFT Fundraising Writer](https://annualfundtoolkit.com)')
 
 # Initializing the OpenAI client with the API key
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -62,7 +62,7 @@ def generate_form_based_on_template(template):
 
 
 prompt_templates = {
-    "Thank You Letter for Donors": "Please write a thank you letter for donors of {nonprofit_name}. Here is more info: {moreInfo}",
+    "Thank You Letter for Donors": "Please write a thank you letter for donors of {nonprofit_name}. Here is more info: {more_info}",
     "Event Reminder": "Send a reminder for {event_name} on {event_date}. Here are the details: {event_details}"
 }
 
