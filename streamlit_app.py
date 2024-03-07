@@ -44,23 +44,26 @@ def generate_form_based_on_template(template):
     
     # Create a dictionary to store user inputs for each placeholder
     user_inputs = {}
-    with st.sidebar:
-        with st.form("dynamic_form"):
-            for placeholder in placeholders:
-                # Create an appropriate field for each placeholder
-                user_inputs[placeholder] = st.text_input(placeholder.capitalize())
-            
-            submitted = st.form_submit_button("Submit")
-            
-            if submitted:
-                # Fill the template with user inputs
-                filled_prompt = template.format(**user_inputs)
-                return filled_prompt
+    with st.form("dynamic_form"):
+        for placeholder in placeholders:
+            # Replace underscores with spaces and apply title case for a prettier label
+            pretty_placeholder = placeholder.replace("_", " ").title()
+            # Create an appropriate field for each placeholder
+            user_input = st.text_input(pretty_placeholder)
+            user_inputs[placeholder] = user_input
+        
+        submitted = st.form_submit_button("Submit")
+        
+        if submitted:
+            # Fill the template with user inputs
+            filled_prompt = template.format(**user_inputs)
+            return filled_prompt
     return None
 
+
 prompt_templates = {
-    "Thank You Letter for Donors": "Please write a thank you letter for donors of {nonprofitName}. Here is more info: {moreInfo}",
-    "Event Reminder": "Send a reminder for {eventName} on {eventDate}. Here are the details: {eventDetails}"
+    "Thank You Letter for Donors": "Please write a thank you letter for donors of {nonprofit_name}. Here is more info: {moreInfo}",
+    "Event Reminder": "Send a reminder for {event_name} on {event_date}. Here are the details: {event_details}"
 }
 
 # Select a prompt template
@@ -68,21 +71,26 @@ with st.sidebar:
     template_option_label = st.selectbox("Choose a prompt template", options=list(prompt_templates.keys()))
     template_option = prompt_templates[template_option_label]
 
-# Generate form and get filled prompt based on selected template
-filled_prompt = generate_form_based_on_template(template_option)
+    # Generate form and get filled prompt based on selected template
+    filled_prompt = generate_form_based_on_template(template_option)
+
+    refine = st.button("Refine Tone")
+    gratitude = st.button("Add Gratitude")
+    shorter = st.button("Make It Shorter")
+
+# Buttons for predefined actions
+if refine:
+    append_and_get_response("Please refine the tone of this text to be more professional.")
+
+if gratitude:
+    append_and_get_response("Please add more expressions of gratitude.")
+
+if shorter:
+    append_and_get_response("Please make this text shorter while keeping the essential gratitude message.")
+
 if filled_prompt:
     append_and_get_response(filled_prompt)
 
 # Chat input for additional messages
 if additional_prompt := st.chat_input("How can I improve this text?"):
     append_and_get_response(additional_prompt)
-
-# Buttons for predefined actions
-if st.button("Refine Tone"):
-    append_and_get_response("Please refine the tone of this text to be more professional.")
-
-if st.button("Add Gratitude"):
-    append_and_get_response("Please add more expressions of gratitude.")
-
-if st.button("Make It Shorter"):
-    append_and_get_response("Please make this text shorter while keeping the essential gratitude message.")
