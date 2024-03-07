@@ -76,7 +76,9 @@ with st.sidebar:
 
     refine = st.button("Refine Tone")
     gratitude = st.button("Add Gratitude")
-    shorter = st.button("Make It Shorter")
+    concise = st.button("Make It Concise")
+    woman = st.button("Woman's Voice")
+    plain = st.button("Plainspoken English")
 
 # Buttons for predefined actions
 if refine:
@@ -85,8 +87,15 @@ if refine:
 if gratitude:
     append_and_get_response("Please add more expressions of gratitude.")
 
-if shorter:
-    append_and_get_response("Please make this text shorter while keeping the essential gratitude message.")
+if concise:
+    append_and_get_response("Please make this more concise while keeping the essential message.")
+
+if woman:
+    append_and_get_response("Please write it in a woman's voice.")
+
+if plain:
+    append_and_get_response("Please use plainspoken English.")
+
 
 if filled_prompt:
     append_and_get_response(filled_prompt)
