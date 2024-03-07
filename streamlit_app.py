@@ -36,9 +36,10 @@ def append_and_get_response(prompt):
         response = st.write_stream(stream)
     st.session_state.messages.append({"role": "assistant", "content": response})
     
-    
+
+   
 # Form for initial user input
-with st.form("user_info"):
+with st.sidebar.form("user_info"):
     nonprofitName = st.text_input("Nonprofit Name")
     moreInfo = st.text_area("More Info")
     submitted = st.form_submit_button("Submit")
@@ -48,9 +49,10 @@ if submitted:
     append_and_get_response(first_prompt)
 
 # Chat input for additional messages
-additional_prompt = st.chat_input("How can I improve this text?")
-if additional_prompt:
+if additional_prompt  := st.chat_input("How can I improve this text?"):
     append_and_get_response(additional_prompt)
+
+
 
 # Buttons for predefined actions
 if st.button("Refine Tone"):
