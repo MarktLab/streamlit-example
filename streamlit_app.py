@@ -93,7 +93,7 @@ if gratitude:
     append_and_get_response("Please add more expressions of gratitude.")
 
 if impact:
-    append_and_get_response("Please emphasize the donor's impact over the act of giving money.")
+    append_and_get_response("Rewrite to answer this question: what impact is the donor having?")
 
 if concise:
     append_and_get_response("Please make this more concise while keeping the essential message.")
