@@ -74,15 +74,19 @@ with st.sidebar:
     # Generate form and get filled prompt based on selected template
     filled_prompt = generate_form_based_on_template(template_option)
 
-    refine = st.button("Refine Tone")
+    whynow = st.button("Why Now?")
+    fight = st.button("Fight Injustice")
     gratitude = st.button("Add Gratitude")
     concise = st.button("Make It Concise")
     woman = st.button("Woman's Voice")
     plain = st.button("Plainspoken English")
 
 # Buttons for predefined actions
-if refine:
-    append_and_get_response("Please refine the tone of this text to be more professional.")
+if whynow:
+    append_and_get_response("Rewrite to answer these questions: Why should the reader take action now? What will happen if they don't take action?")
+
+if fight:
+    append_and_get_response("Rewrite to answer these questions: Is there a wrong that must be set right? Something to fight for or against?")
 
 if gratitude:
     append_and_get_response("Please add more expressions of gratitude.")
