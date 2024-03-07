@@ -77,6 +77,7 @@ with st.sidebar:
     whynow = st.button("Why Now?")
     fight = st.button("Fight Injustice")
     gratitude = st.button("Add Gratitude")
+    impact = st.button("Impact")
     concise = st.button("Make It Concise")
     woman = st.button("Woman's Voice")
     plain = st.button("Plainspoken English")
@@ -90,6 +91,9 @@ if fight:
 
 if gratitude:
     append_and_get_response("Please add more expressions of gratitude.")
+
+if impact:
+    append_and_get_response("Please emphasize the donor's impact over the act of giving money.")
 
 if concise:
     append_and_get_response("Please make this more concise while keeping the essential message.")
