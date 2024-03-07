@@ -14,6 +14,21 @@ if "openai_model" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Function to append messages and get response
+def append_and_get_response(new_message):
+    st.session_state.messages.append({"role": "user", "content": new_message})
+    
+    stream = client.chat.completions.create(
+        model=st.session_state["openai_model"],
+        messages=[
+            {"role": m["role"], "content": m["content"]}
+            for m in st.session_state.messages
+        ],
+        stream=True,
+    )
+    response = st.write_stream(stream)
+    st.session_state.messages.append({"role": "assistant", "content": response})
+
 # Form for initial user input
 with st.form("user_info"):
     nonprofitName = st.text_input("Nonprofit Name")
@@ -22,39 +37,19 @@ with st.form("user_info"):
 
 if submitted:
     first_prompt = f"Please write a thank you letter for donors of {nonprofitName}. Here is more info: {moreInfo}"
-    st.session_state.messages.append({"role": "user", "content": first_prompt})
+    append_and_get_response(first_prompt)
 
-    with st.chat_message("user"):
-        st.markdown(first_prompt)
+# Chat input for additional messages
+additional_prompt = st.chat_input("How can I improve this text?")
+if additional_prompt:
+    append_and_get_response(additional_prompt)
 
-    with st.chat_message("assistant"):
-        stream = client.chat.completions.create(
-            model=st.session_state["openai_model"],
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
-        # Assuming st.write_stream is a hypothetical function to handle streaming responses
-        response = st.write_stream(stream)
-    st.session_state.messages.append({"role": "assistant", "content": response})
+# Buttons for predefined actions
+if st.button("Refine Tone"):
+    append_and_get_response("Please refine the tone of this text to be more professional.")
 
-    # Chat input for additional messages
-    if prompt := st.chat_input("How can I improve this text?"):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+if st.button("Add Gratitude"):
+    append_and_get_response("Please add more expressions of gratitude.")
 
-        with st.chat_message("assistant"):
-            stream = client.chat.completions.create(
-                model=st.session_state["openai_model"],
-                messages=[
-                    {"role": m["role"], "content": m["content"]}
-                    for m in st.session_state.messages
-                ],
-                stream=True,
-            )
-            # Assuming st.write_stream is a hypothetical function to handle streaming responses
-            response = st.write_stream(stream)  
-        st.session_state.messages.append({"role": "assistant", "content": response})
+if st.button("Make It Shorter"):
+    append_and_get_response("Please make this text shorter while keeping the essential gratitude message.")
