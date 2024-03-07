@@ -48,8 +48,14 @@ def generate_form_based_on_template(template):
         for placeholder in placeholders:
             # Replace underscores with spaces and apply title case for a prettier label
             pretty_placeholder = placeholder.replace("_", " ").title()
-            # Create an appropriate field for each placeholder
-            user_input = st.text_input(pretty_placeholder)
+
+            # Check if the current placeholder is 'more_info' to use a text_area
+            if placeholder == "more_info":
+                user_input = st.text_area(pretty_placeholder, help='You can copy & paste a text in here to give context.')
+            else:
+                # Create an appropriate field for each placeholder
+                user_input = st.text_input(pretty_placeholder)
+
             user_inputs[placeholder] = user_input
         
         submitted = st.form_submit_button("Submit")
@@ -63,7 +69,7 @@ def generate_form_based_on_template(template):
 
 prompt_templates = {
     "Thank You Letter for Donors": "Please write a thank you letter for donors of {nonprofit_name}. Here is more info: {more_info}",
-    "Event Reminder": "Send a reminder for {event_name} on {event_date}. Here are the details: {event_details}"
+    "Event Reminder": "Send a reminder for {event_name} on {event_date}. Here are the details: {more_info}"
 }
 
 # Select a prompt template
