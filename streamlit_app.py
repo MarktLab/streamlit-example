@@ -58,11 +58,15 @@ def generate_form_based_on_template(template):
                 return filled_prompt
     return None
 
+prompt_templates = {
+    "Thank You Letter for Donors": "Please write a thank you letter for donors of {nonprofitName}. Here is more info: {moreInfo}",
+    "Event Reminder": "Send a reminder for {eventName} on {eventDate}. Here are the details: {eventDetails}"
+}
+
 # Select a prompt template
 with st.sidebar:
-    template_option = st.selectbox("Choose a prompt template",
-                                ["Please write a thank you letter for donors of {nonprofitName}. Here is more info: {moreInfo}",
-                                    "Send a reminder for {eventName} on {eventDate}. Here are the details: {eventDetails}"])
+    template_option_label = st.selectbox("Choose a prompt template", options=list(prompt_templates.keys()))
+    template_option = prompt_templates[template_option_label]
 
 # Generate form and get filled prompt based on selected template
 filled_prompt = generate_form_based_on_template(template_option)
