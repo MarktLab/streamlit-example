@@ -36,10 +36,9 @@ def append_and_get_response(prompt):
         response = st.write_stream(stream)
     st.session_state.messages.append({"role": "assistant", "content": response})
     
-
-   
+    
 # Form for initial user input
-with st.sidebar.form("user_info"):
+with st.form("user_info"):
     nonprofitName = st.text_input("Nonprofit Name")
     moreInfo = st.text_area("More Info")
     submitted = st.form_submit_button("Submit")
